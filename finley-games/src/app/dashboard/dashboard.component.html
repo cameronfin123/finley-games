@@ -1,0 +1,14 @@
+<div class="d-flex flex-wrap justify-content-center">
+    <div *ngFor="let game of cardList" class="card m-1" style="width: 15rem;">  
+        <div *ngIf="game.imagePath">
+            <img  class="card-img-top" src="{{game.imagePath}}" alt="Card image cap">  
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{game.name}}</h5>
+            <p class="card-text">{{game.description}}</p>
+        </div>
+        <div class="card-footer">
+            <a href="{{game.path}}" class="btn btn-dark">Play</a>
+        </div>
+    </div>
+</div>

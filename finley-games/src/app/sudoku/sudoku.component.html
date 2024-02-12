@@ -1,0 +1,72 @@
+<div class="sudokuContainer">
+    <div class="row">
+        <div class="col d-flex justify-content-center pt-2">
+            <h1 class="align-self-center" style="margin:0">Sudoku</h1>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col boardContainer">
+                <div class="row" *ngFor="let row of board.board; index as r">
+                    <button *ngFor="let cell of row; index as c" 
+                        class="cell s-button square
+                            {{c % boardKey == 0?'bl ':''}}
+                            {{c % boardKey == (boardKey - 1)?'br ':''}}
+                            {{r % boardKey == 0?'bt ':''}}
+                            {{r % boardKey == (boardKey - 1)?'bb ':''}}
+                            {{cell.valid==true?'valid ':'invalid '}}
+                            {{selectedCell != undefined && (selectedCell.row == r && selectedCell.col == c)?'selected ':(selectedCell != undefined && (selectedCell.row == r ||selectedCell.col == c))?'highlighted ':''}}
+                            {{gameOver?'gameOver':''}} 
+                            col d-flex justify-content-center"
+                        (click)="handleSelectCell(r,c)"
+                    >
+                        <div class="cellInner square s-buttonChild align-self-center d-flex justify-content-center align-items-center">
+                            <div class="flex-grow-1" *ngIf="cell.value != -1">{{cell.value}}</div>
+                        </div>
+                    </button>
+                </div>
+        </div>
+        <div class="col selectorContainer">
+            <div class="row">
+                <button type="button" class="s-button col" (click)="generateBoard()">
+                    <div class="s-buttonChild">
+                        New Game
+                    </div>
+                </button>
+            </div>
+            <div class="row">
+                <button [disabled]="history.length <= 0" type="button" class="s-button col" (click)="handleRestart()">
+                    <div class="s-buttonChild undo row">
+                        <img  src="assets/restart-icon.png" alt="Card image cap"> 
+                        <span>Restart</span>
+                    </div>
+                </button>
+                <button [disabled]="gameOver || history.length <= 0" type="button" class="s-button col col-4" (click)="handleUndo()">
+                    <div class="s-buttonChild undo row">
+                        <img  src="assets/undo-icon.png" alt="Card image cap"> 
+                        <span>Undo</span>
+                    </div>
+                </button>
+                <button [disabled]="history.length <= 0" type="button" class="s-button col" (click)="handleNote()">
+                    <div class="s-buttonChild undo row">
+                        <img  src="assets/note-icon.png" alt="Card image cap">  
+                        <span>Note</span>
+                    </div>
+                </button>
+            </div>
+            <div class="row">
+                <button class="s-button d-flex square justify-content-center col col-{{this.boardKey < 4?12/this.boardKey:3}}" 
+                *ngFor="let l of selectorLabels; index as i"
+                (click)="handleSelectNumber(l)">
+                    <div class="s-buttonChild square align-self-center d-flex justify-content-center align-items-center">{{l}}</div>
+                </button>
+            </div>
+            <div class="row">
+                <button type="button" class="s-button col" (click)="handleErase()">
+                    <div class="s-buttonChild">
+                        Erase
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

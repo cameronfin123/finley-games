@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+html, body { 
+    --buttonColor:#212529;
+    --showSizeScale: 1;
+    --showHideTransitionTime: 0.5s;
+    height: 100%; 
+}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.customBackground {
+    background: linear-gradient(to right, var(--xColor), var(--oColor));
+}
+.show {
+    display:block;
+}
+.hide {
+    display:none !important;
+}
+
+.show-scale {
+    transform: scale(var(--showSizeScale));
+}
+
+.hide-scale {
+    transform: scale(0);
+}

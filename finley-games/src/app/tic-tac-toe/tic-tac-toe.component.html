@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center pt-2">
+            <h1 class="align-self-center">Tic-Tac-Toe</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <button type="button" class="btn btn-dark m-2" (click)="handleRestart()">Restart</button>
+            <button [disabled]="gameOver || history.length == 0" type="button" class="btn btn-dark m-2" (click)="handleUndo()">Undo</button>
+        </div>
+    </div>
+    <div class="row justify-content-center m-2" style="position:relative">
+        <div class="col d-flex flex-column boardContainer justify-content-center" style="position:relative">
+            <div class="row flex-shrink-1 {{isXTurn?'xButtonWrapper':'oButtonWrapper'}}">
+                <div *ngFor="let val of board; index as i"  
+                    (click)="handleMakeMove(i)"
+                    class="buttonWrapper {{!gameOver && val.value == ''?'active':'inactive'}} d-flex flex-shrink-1 col-4 justify-content-center {{val.getParentStyle()}}">
+                        <div class="align-self-center cell {{val.getStyle()}}">
+                    </div>
+                </div>
+            </div>
+            <div class="{{gameOver?'show':'hide'}} gameOverContainer justify-content-center flex-shrink-1" >
+                <button type="button" class="gameOverButton d-flex justify-content-center align-self-center flex-shrink-1 btn btn-dark m-1" (click)="handleRestart()">
+                    <div class="gameOverDiv1 d-flex justify-content-center flex-shrink-1">
+                        <div class="align-self-center flex-shrink-1">
+                            <span *ngIf="gameOver && gameWinner == ''">Game Over</span>
+                            <span *ngIf="gameWinner != ''">{{gameWinner}} won!</span>
+                            <br />Restart? 
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
