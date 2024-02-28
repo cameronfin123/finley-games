@@ -12,16 +12,24 @@ button:focus-visible {
 .sudokuContainer {
     --baseColor:rgb(82, 169, 255);
 
-    --highlighted: rgb(215, 232, 253);
+    --emphasized: rgb(215, 232, 253);
+    --completed: rgb(52, 128, 52);
+    --focused: hsl(50, 87%, 0%);
 
-    --validCellHover: rgb(186, 218, 255);
-    --validCellSelected: rgb(87, 166, 255);
-    --validCellSelectedHover: rgb(16, 135, 254);
+    --validCell: hsl(0, 0%, 100%);
+    --validHighlighted: hsl(212, 100%,90%);
+    --validSelectedNum: hsl(212, 100%, 65%);
+    --validHighlightedSelectedNum: hsl(212, 100%, 50%);
+    
+    --invalid: hsl(0, 65%, 85%);
+    --invalidHighlighted: hsl(0, 65%, 75%);
+    --invalidSelectedNum: hsl(0, 65%, 65%);
+    --invalidHighlightedSelectedNum: hsl(0, 65%, 55%);
 
-    --invalidCell: rgb(223, 179, 179);
-    --invalidCellHover: rgb(226, 119, 119);
-    --invalidCellSelected: rgb(225, 57, 57);
-    --invalidCellSelectedHover: rgb(228, 14, 14);
+    --disabled: hsl(0, 0%, 80%);
+    --disabledHighlighted: hsl(0, 0%, 60%);
+    --disabledSelectedNum: hsl(0, 0%, 45%);
+    --disabledHighlightedSelectedNum: hsl(0, 0%, 40%);
 
     padding:0;
     margin:0 auto;
@@ -50,12 +58,12 @@ button:focus-visible {
         
         cursor: pointer;
         color: black;  
-        background: var(--validCellHover);
+        background: var(--validHighlighted);
         border-radius: 0.25rem;
         width: 100%;
         transition: transform 0.5s;
     
-        .undo,.restart {
+        .undo,.restart,.notes {
             flex-shrink: 1;
         }
 
@@ -63,72 +71,175 @@ button:focus-visible {
             flex-shrink: 1;
         }
     }
+
+    .notes-on {
+        background: rgb(170, 207, 173);
+    }
+    .notes-on:hover {
+        background: rgb(85, 212, 96) !important;
+    }
+    .notes-on:active {
+        background: rgb(23, 212, 39) !important;
+    }
 }
-.s-button:hover .s-buttonChild {
-    background: var(--validCellSelected)
+
+.s-button:hover .s-buttonChild, .s-button.selected .s-buttonChild {
+    background: var(--validSelectedNum);
 }
+
 .s-button:active .s-buttonChild {
-    background: var(--validCellSelectedHover)
+    background: var(--validHighlightedSelectedNum)
+}
+
+.s-button:disabled .s-buttonChild {
+    background: var(--disabled);
+    cursor:auto;
 }
 
 .square {
     aspect-ratio: 1;
 }
 
-.cell {
-    background: white !important;
-    border: 1px solid var(--baseColor);
-}
-.cellInner {
-    background: white !important;
-    border: 0 !important;
-    width: 75%;
+.hide { 
+    display:none;
 }
 
 .boardContainer {
     flex: 0 0 auto;
-    max-width:65vh;
-    width: 67%;
+    width: 60%;
+    max-width: 65vh;
 
-    .highlighted.cell .cellInner {
-        background:var(--highlighted) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--highlighted);
+    .s-buttonChild {
+        padding:0;
     }
-    
-    .valid.cell:hover .cellInner {
+
+    .cell {
+        background: white !important;
+        border: 1px solid var(--baseColor);
+    }
+
+    .cellInner {
+        border: 0 !important;
+    }
+
+    .valid.cell {
+        .cellInner {
+            background:var(--validCell);
+            box-shadow: 0 0 0.25rem  0.25rem var(--validCell);
+        }
+        .highlighted {
+            background:var(--validHighlighted);
+            box-shadow: 0 0 0.25rem  0.25rem var(--validHighlighted);
+        }
+        .selectedNum {
+            background:var(--validSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--validSelectedNum);
+        }
+        .highlighted.selectedNum {
+            background:var(--validHighlightedSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--validHighlightedSelectedNum);
+        }
+        .focused {
+            box-shadow: 0 0 0.25rem  0.25rem var(--focused);
+        }
+    }
+
+    .invalid.cell {
+        .cellInner {
+            background:var(--invalid);
+            box-shadow: 0 0 0.25rem  0.25rem var(--invalid);
+        }
+        .highlighted {
+            background:var(--invalidHighlighted);
+            box-shadow: 0 0 0.25rem  0.25rem var(--invalidHighlighted);
+        }
+        .selectedNum {
+            background:var(--invalidSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--invalidSelectedNum);
+        }
+        .highlighted.selectedNum {
+            background:var(--invalidHighlightedSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--invalidHighlightedSelectedNum);
+        }
+        .focused {
+            box-shadow: 0 0 0.25rem  0.25rem var(--focused);
+        }
+    }
+
+    .disabled.cell {
+        .cellInner {
+            background:var(--disabled);
+            box-shadow: 0 0 0.25rem  0.25rem var(--disabled);
+        }
+        .highlighted {
+            background:var(--disabledHighlighted);
+            box-shadow: 0 0 0.25rem  0.25rem var(--disabledHighlighted);
+        }
+        .selectedNum {
+            background:var(--disabledSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--disabledSelectedNum);
+        }
+        .highlighted.selectedNum {
+            background:var(--disabledHighlightedSelectedNum);
+            box-shadow: 0 0 0.25rem  0.25rem var(--disabledHighlightedSelectedNum);
+        }
+        .focused {
+            box-shadow: 0 0 0.25rem  0.25rem var(--focused);
+        }
+    }
+
+    .cell:hover .cellInner, .focused.cellInner {
+        box-shadow: 0 0 0.25rem  0.25rem var(--focused) !important;
+    }
+
+    .highlightNote {
+        color:white;
+        background:var(--validHighlightedSelectedNum) !important;
+        border-radius: 50%;
+        aspect-ratio: 1;
+    }
+
+    .notes {
+        font-size:0.45rem;
+        width:100%;
+        aspect-ratio:1;
+        height:33%;
+        .col {
+            line-height:normal;     
+            aspect-ratio: 1;
+        }
+    }
+
+    .bl {
+        border-left: 2px solid var(--baseColor);
+    }
+    .bt {
+        border-top: 2px solid var(--baseColor);
+    }
+    .br {
+        border-right: 2px solid var(--baseColor);
+    }
+    .bb {
+        border-bottom: 2px solid var(--baseColor);
+    }
+}
+
+.completed {
+    .cellInner {
         background:var(--validCellHover) !important;
         box-shadow: 0 0 0.25rem  0.25rem var(--validCellHover);
     }
-    .valid.cell.selected .cellInner {
-        background:var(--validCellSelected) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--validCellSelected);
-    }
-    .valid.cell.selected:hover .cellInner {
-        background:var(--validCellSelectedHover) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--validCellSelectedHover);
-    }
-    
-    .invalid.cell .cellInner {
-        background:var(--invalidCell) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--invalidCell);
-    }
-    .invalid.cell:hover .cellInner {
-        background:var(--invalidCellHover) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--invalidCellHover);
-    }
-    .invalid.cell.selected .cellInner {
-        background:var(--invalidCellSelected) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--invalidCellSelected);
-    }
-    .invalid.cell.selected:hover .cellInner {
-        background:var(--invalidCellSelectedHover) !important;
-        box-shadow: 0 0 0.25rem  0.25rem var(--invalidCellSelectedHover);
-    }
+}
+
+.settingsContainer {
+    margin-top:0.5rem;
+    width: 75%;
+    flex: 0 0 auto;
 }
 .selectorContainer {
     flex: 0 0 auto;
-    width: 33%;
-    max-width: 200px;
+    width: 30%;
+    max-width: 40vh;
     margin: 0 1rem;
 
     .s-button {
@@ -142,8 +253,8 @@ button:focus-visible {
     }
 }
 
-@media (width < 100em) {
-    .selectorContainer {
+@media (width < 700px) {
+    .selectorContainer, .settingsContainer {
         width: 100%;
         .s-button {
             .s-buttonChild {
@@ -161,17 +272,4 @@ button:focus-visible {
 
 .gameOver {
     pointer-events: none;
-}
-
-.bl {
-    border-left: 2px solid var(--baseColor);
-}
-.bt {
-    border-top: 2px solid var(--baseColor);
-}
-.br {
-    border-right: 2px solid var(--baseColor);
-}
-.bb {
-    border-bottom: 2px solid var(--baseColor);
 }

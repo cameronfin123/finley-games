@@ -5,59 +5,62 @@
         </div>
     </div>
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col boardContainer">
-                <div class="row" *ngFor="let row of board.board; index as r">
+        <div class="col boardContainer {{state.completed?'completed ':''}}">
+                <div class="row" *ngFor="let row of state.board; index as r">
                     <button *ngFor="let cell of row; index as c" 
-                        class="cell s-button square
-                            {{c % boardKey == 0?'bl ':''}}
-                            {{c % boardKey == (boardKey - 1)?'br ':''}}
-                            {{r % boardKey == 0?'bt ':''}}
-                            {{r % boardKey == (boardKey - 1)?'bb ':''}}
-                            {{cell.valid==true?'valid ':'invalid '}}
-                            {{selectedCell != undefined && (selectedCell.row == r && selectedCell.col == c)?'selected ':(selectedCell != undefined && (selectedCell.row == r ||selectedCell.col == c))?'highlighted ':''}}
-                            {{gameOver?'gameOver':''}} 
-                            col d-flex justify-content-center"
-                        (click)="handleSelectCell(r,c)"
+                        [disabled]="state.completed"
+                        type="button"
+                        class="cell s-button square col d-flex justify-content-center
+                            {{this.getCellStyling(r,c)}}"
+                        (click)="handleCellClick(r,c, $event)"
+                        id="{{getCellId(r,c)}}"
                     >
-                        <div class="cellInner square s-buttonChild align-self-center d-flex justify-content-center align-items-center">
-                            <div class="flex-grow-1" *ngIf="cell.value != -1">{{cell.value}}</div>
+                        <div class="cellInner {{cellInnerStyling(r,c)}} square s-buttonChild align-self-center d-flex justify-content-center">
+                            <div *ngIf="cell.val!=0" class="flex-grow-1 align-self-center">{{cell.val==0?'':cell.val}}</div>
+                            <div *ngIf="cell.val==0" class="d-flex flex-grow-1 flex-shrink-1 notes row">
+                                <div *ngFor="let l of selectorLabels; index as i" 
+                                class="col square d-flex justify-content-center align-items-center
+                                {{getCellNotesStyling(r,c,i+1)}}">
+                                    {{cell.notes.has(i+1)?l:''}}
+                                </div>
+                            </div>
                         </div>
                     </button>
                 </div>
         </div>
         <div class="col selectorContainer">
             <div class="row">
-                <button type="button" class="s-button col" (click)="generateBoard()">
+                <button type="button" class="s-button col" (click)="handleNewGame()">
                     <div class="s-buttonChild">
-                        New Game
+                        New Game (Alt + N)
                     </div>
                 </button>
             </div>
             <div class="row">
-                <button [disabled]="history.length <= 0" type="button" class="s-button col" (click)="handleRestart()">
-                    <div class="s-buttonChild undo row">
+                <button [disabled]="history.length <= 1" type="button" class="s-button col" (click)="handleRestart()">
+                    <div class="s-buttonChild restart row">
                         <img  src="assets/restart-icon.png" alt="Card image cap"> 
                         <span>Restart</span>
                     </div>
                 </button>
-                <button [disabled]="gameOver || history.length <= 0" type="button" class="s-button col col-4" (click)="handleUndo()">
+                <button [disabled]="history.length <= 1" type="button" class="s-button col col-4" (click)="handleUndo()">
                     <div class="s-buttonChild undo row">
                         <img  src="assets/undo-icon.png" alt="Card image cap"> 
                         <span>Undo</span>
                     </div>
                 </button>
-                <button [disabled]="history.length <= 0" type="button" class="s-button col" (click)="handleNote()">
-                    <div class="s-buttonChild undo row">
+                <button [disabled]="options.disableNotes" type="button" class="s-button col" (click)="handleToggleNote()">
+                    <div class="s-buttonChild notes {{state.notes==true?'notes-on':''}} row">
                         <img  src="assets/note-icon.png" alt="Card image cap">  
-                        <span>Note</span>
+                        <span>{{state.notes?'On':'Off'}}</span>
                     </div>
                 </button>
             </div>
             <div class="row">
-                <button class="s-button d-flex square justify-content-center col col-{{this.boardKey < 4?12/this.boardKey:3}}" 
-                *ngFor="let l of selectorLabels; index as i"
-                (click)="handleSelectNumber(l)">
-                    <div class="s-buttonChild square align-self-center d-flex justify-content-center align-items-center">{{l}}</div>
+                <button class="s-button d-flex square justify-content-center col col-{{options.boardKey < 4?12/options.boardKey:3}} {{item==''+this.state.lastSelectedValue?'selected ':''}}" 
+                *ngFor="let item of this.selectorLabels, index as i"
+                (click)="handleNumberClicked(item,$event)" [disabled]="state.numberCounts.get(item) == (options.boardKey * options.boardKey)">
+                    <div class="s-buttonChild square align-self-center d-flex justify-content-center align-items-center">{{item}}</div>
                 </button>
             </div>
             <div class="row">
@@ -66,6 +69,51 @@
                         Erase
                     </div>
                 </button>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col settingsContainer">
+            <div class="row">
+                <div class="col">
+                    <div class="row form-check form-switch">
+                        <span>Board Size</span>
+                        <select (change)="handleSelctBoardSize($event)" style="display:inline;width:unset" class="form-select form-select-sm" aria-label="Key Size" id="boardKey">
+                            <option value="2">4x4</option>
+                            <option selected value="3">9x9</option>
+                            <option value="4">16x16</option>
+                        </select>
+                    </div>
+                    
+                </div>
+                <div class="col">
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.showErrors" class="form-check-input" (click)="handleToggleShowErrors()" type="checkbox" role="switch" id="showErrors">
+                        <label class="" for="showErrors">Show Errors</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.showMistakes" class="form-check-input" (click)="handleToggleShowMistakes()" type="checkbox" role="switch" id="showMistakes">
+                        <label class="" for="showMistakes">Show Mistakes</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.showOriginal" class="form-check-input" (click)="handleToggleShowOriginal()" type="checkbox" role="switch" id="showOriginal">
+                        <label class="" for="showOriginal">Highlight Locked</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.autoRemoveNotes" class="form-check-input" (click)="handleToggleAutoRemoveNotes()" type="checkbox" role="switch" id="autoRemoveNotes">
+                        <label class="" for="autoRemoveNotes">Auto Remove Notes</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.autoAddNotes" class="form-check-input" (click)="handleToggleAutoAddNotes()" type="checkbox" role="switch" id="autoAddNotes">
+                        <label class="" for="autoAddNotes">Auto Add Notes</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input [checked]="this.options.disableNotes" class="form-check-input" (click)="handleToggleDisableNotes()" type="checkbox" role="switch" id="disableNotes">
+                        <label class="" for="disableNotes">Disable Notes</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
