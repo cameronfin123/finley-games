@@ -25,7 +25,7 @@ export class DashboardComponent{
       index: 1,
       name:"Sudoku",
       path:"sudoku",
-      imagePath:"",
+      imagePath:"assets/sudoku-logo.png",
       description: "Fill in all 81 squares with no numbers in the same row or column or 9x9 square!"
     }
   ];
