@@ -37,10 +37,10 @@ export class DashboardComponent{
     },
     {
       index: 2,
-      name:"Animation",
-      path:"animations",
+      name:"SVGs",
+      path:"svgs",
       imagePath:"",
-      description: "My animations"
+      description: "My SVGs"
     },
   ];
 

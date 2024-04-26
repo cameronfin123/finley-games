@@ -11,5 +11,5 @@ export const routes: Routes = [
     {path: 'tic-tac-toe', component: TicTacToeComponent},
     {path: 'sudoku', component: SudokuComponent},
     {path: 'physics', component: PhysicsComponent},
-    {path: 'animations',component:AnimationsComponent}
+    {path: 'svgs',component:AnimationsComponent}
 ];
