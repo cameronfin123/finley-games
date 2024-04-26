@@ -27,7 +27,21 @@ export class DashboardComponent{
       path:"sudoku",
       imagePath:"assets/sudoku-logo.png",
       description: "Fill in all 81 squares with no numbers in the same row or column or 9x9 square!"
-    }
+    },
+    {
+      index: 2,
+      name:"Physics",
+      path:"physics",
+      imagePath:"",
+      description: "My physics sim"
+    },
+    {
+      index: 2,
+      name:"Animation",
+      path:"animations",
+      imagePath:"",
+      description: "My animations"
+    },
   ];
 
   constructor(){}

@@ -1,0 +1,11 @@
+<!--canvas #myCanvas></canvas-->
+<svg style="vertical-align:top" [attr.width]="width" [attr.height]="height" xmlns="http://www.w3.org/2000/svg">
+    <path *ngFor="let path of svgPaths" [attr.d]="path" fill="none" stroke="grey" />
+    <circle *ngFor="let p of world.points" [attr.cx]="p.position.x" [attr.cy]="p.position.y" r="2" fill="red"/>
+    <circle *ngFor="let p of blobs" [attr.cx]="p.center.x" [attr.cy]="p.center.y" r="2" fill="green"/>
+    <line *ngFor="let p of blobPoints" [attr.x1]="center.x" [attr.y1]="center.y" [attr.x2]="p.x" [attr.y2]="p.y" stroke="green" />
+</svg>
+<svg style="vertical-align:top" [attr.width]="width" [attr.height]="height" xmlns="http://www.w3.org/2000/svg">
+    <path stroke="black" fill="transparent" [attr.d]="originalSvg"></path>
+    <path stroke="black" fill="transparent" [attr.d]="svgPaths[svgPaths.length-1]" stroke="red"></path>
+</svg>
